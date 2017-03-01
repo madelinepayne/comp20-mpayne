@@ -12,10 +12,73 @@
 
     <video src="https://www.cs.tufts.edu/comp/20/fail.mp4" id="failvideo" controls></video>
     <div id="lyrics"></div>
+    <div id="timer"></div>
 
-    <script>
+    <script type="text/javascript">
+        // var lyrics = document.getElementById("lyrics");
+        // lyrics.addEventListener('event_name', function (event) {
+        //     // handle the event, whatever it is
+        // })
+        var failvideo = document.getElementById("failvideo");
+        var lyrics = document.getElementById("lyrics");
+        var image = document.getElementById("Image");
+        var timer = document.getElementById("timer");
+        failvideo.addEventListener("timeupdate", function() {
+            timer.innerHTML = failvideo.currentTime;
+            
+            if (failvideo.currentTime > 9 && failvideo.currentTime < 12.9) {
+                lyrics.innerHTML ="<h3>You've got me feelin' emotions</h3>";
+            }
+            else if (failvideo.currentTime > 13 && failvideo.currentTime < 16.9) {
+                lyrics.innerHTML = "<h3>Deeper than I've ever dreamed of</h3>";
+            }
+            else if (failvideo.currentTime > 17 && failvideo.currentTime < 20.9) {
+                lyrics.innerHTML = "<h3>You've got me feelin' emotions</h3>";
+            }
+            else if (failvideo.currentTime > 21 && failvideo.currentTime < 25.9) {
+                lyrics.innerHTML = "<h3>Higher than the heavens above</h3>";
+            }
+            else if (failvideo.currentTime > 26 && failvideo.currentTime < 29.9) {
+                lyrics.innerHTML = "<h3>I feel good, I feel nice</h3>";
+            }
+            else if (failvideo.currentTime > 30 && failvideo.currentTime < 33.9) {
+                lyrics.innerHTML = "<h3>I've never felt so satisfied</h3>";
+            }
+            else if (failvideo.currentTime > 34 && failvideo.currentTime < 37.9) {
+                lyrics.innerHTML = "<h3>I'm in love, I'm alive</h3>";
+            }
+            else if (failvideo.currentTime > 38 && failvideo.currentTime < 42.9) {
+                lyrics.innerHTML = "<h2>Intoxicated, flyin' high</h2>";
+            }
+            else if (failvideo.currentTime > 43 && failvideo.currentTime < 45.9) {
+                lyrics.innerHTML = "<h3>Feels like a dream</h3>";
+            }
+            else if (failvideo.currentTime > 46 && failvideo.currentTime < 50.9) {
+                lyrics.innerHTML = "<h3>When you touch me tenderly</h3>";
+            }
+            else if (failvideo.currentTime > 51 && failvideo.currentTime < 54.9) {
+                lyrics.innerHTML ="<h3>I don't know if it's real</h3>"
+            }
+            else if (failvideo.currentTime > 55 && failvideo.currentTime < 58.9) {
+                lyrics.innerHTML ="<h3>But I like the way I feel inside</h3>";
+            }
+            else if (failvideo.currentTime > 59 && failvideo.currentTime < 62.9) {
+                lyrics.innerHTML ="<h3>You've got me feelin' emotions</h3>";
+            }
+            else if (failvideo.currentTime > 63 && failvideo.currentTime < 66.9) {
+                lyrics.innerHTML ="<h3>Deeper than I've ever dreamed of</h3>";
+            }
+            else if (failvideo.currentTime > 67 && failvideo.currentTime < 70.9) {
+                lyrics.innerHTML ="<h3>You've got me feelin' emotions</h3>";
+            }
+            else if (failvideo.currentTime > 71) {
+                lyrics.innerHTML = "<h3>Higher than the heavens above</h3>";
+            }
+            else {
+                lyrics.innerHTML ="";
+            }
+        }, false);
+    </script>
     
-  // Complete this section and create a CSS file named style.css
-</script>
 </body>
 </html> 
