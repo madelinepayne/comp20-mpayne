@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Not Uber</title>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+    <link rel="stylesheet" href="index.css" />
+    <script type="text/javascript">
+        var Lat = 0;
+        var Lng = 0;
+        var request = new XMLHttpRequest();
+        var me = new google.maps.LatLng(Lat, Lng);
+        var myOptions = {
+            zoom: 13,
+            center: me,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map;
+        var marker;
+        var infowindow = new google.maps.InfoWindow();
+        
+        function init()
+        {
+            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+            getMyLocation();
+        }
+        
+        function getMyLocation()
+        {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    Lat = position.coords.latitude;
+                    Lng = position.coords.longitude;
+                    renderMap();
+                });
+            }
+            else {
+                alert("Geolocation is not supported on your web browser.");
+            }
+        }
+        
+        function renderMap()
+        {
+            me = new google.maps.LatLng(Lat,Lng);
+            
+            map.panTo(me);
+            
+            marker = new google.maps.Marker({
+                position: me,
+                title: "ZoxN11Sa"
+            });
+            marker.setMap(map);
+            
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(marker.title);
+                infowindow.open(map, marker);
+            });
+        }
+    </script>
+
+</head>
+<body onload="init()">
+    <div id="map_canvas"></div>
+</body>
+</html>
