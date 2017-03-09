@@ -2,13 +2,14 @@
 <html>
 <head>
     <title>Not Uber</title>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+<!--     <script type="text/javascript" src=src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxhem2x2mWEHYY0qs_NOqjYotDFCX8Mvc&callback=init"
+    async defer></script> -->
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
     <link rel="stylesheet" href="index.css" />
     <script type="text/javascript">
-        var Lat = 0;
-        var Lng = 0;
-        var request = new XMLHttpRequest();
-        var me = new google.maps.LatLng(Lat, Lng);
+        var mylat = 0;
+        var mylng = 0;
+        var me = new google.maps.LatLng(mylat, mylng);
         var myOptions = {
             zoom: 13,
             center: me,
@@ -17,6 +18,8 @@
         var map;
         var marker;
         var infowindow = new google.maps.InfoWindow();
+        var request = new XMLHttpRequest();
+        var username = "ZoxN11Sa";
         
         function init()
         {
@@ -28,8 +31,8 @@
         {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    Lat = position.coords.latitude;
-                    Lng = position.coords.longitude;
+                    mylat = position.coords.latitude;
+                    mylng = position.coords.longitude;
                     renderMap();
                 });
             }
@@ -40,7 +43,7 @@
         
         function renderMap()
         {
-            me = new google.maps.LatLng(Lat,Lng);
+            me = new google.maps.LatLng(mylat,mylng);
             
             map.panTo(me);
             
@@ -55,6 +58,37 @@
                 infowindow.open(map, marker);
             });
         }
+        // request.onreadystatechange = function() 
+        // {
+            request.open("POST", "https://defense-in-derpth.herokuapp.com/submit", true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            var data_to_send = "username=" + username + "&lat=" + mylat + "&lng=" + mylng;
+            request.send(data_to_send);
+            
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    var jsonObj = request.responseText;
+                    var elements = JSON.parse(jsonObj);
+                    
+                    if (jsonObj[2] == "p") {
+                        
+                    }
+                    // console.log(jsonObj);
+                    var vehicle = "";
+                    var username, _id, lat, lng, created_at;
+                    for (i in elements) {
+                        vehicle._id = elements[i]._id;
+                        console.log(vehicle._id);
+                        vehicle.username = elements[i].username;
+                        vehicle.lat = elements[i].lat;
+                        vehicle.lng = elements[i].lng;
+                        vehicle.created_at = elements[i].created_at;
+                       
+                    // console.log(elements);
+                    }
+                    
+                }
+            }
     </script>
 
 </head>
