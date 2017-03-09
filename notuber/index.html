@@ -14,23 +14,22 @@
     <div id="map_canvas"></div>
 </body>
 <script type="text/javascript">
-        var mylat = 0;
-        var mylng = 0;
-        var me = new google.maps.LatLng(mylat, mylng);
-        var myOptions = {
-            zoom: 13,
-            center: me,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map;
-        var marker;
-        var infowindow = new google.maps.InfoWindow();
-        var request = new XMLHttpRequest();
-        var username = "ZoxN11Sa";
-        var p_marker = {
-            url: 'https://img.clipartfox.com/7151250dd1619b1d45a9f068d7cdae0f_illustrated-silhouette-of-a-person-clipart-silhouette-no-background_958-958.png',
-            scaledSize: new google.maps.Size(40,40)
-            // anchor: new google.maps.Point(mylat, mylng)
+    var mylat = 0;
+    var mylng = 0;
+    var me = new google.maps.LatLng(mylat, mylng);
+    var myOptions = {
+        zoom: 13,
+        center: me,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map;
+    var marker;
+    var infowindow = new google.maps.InfoWindow();
+    var request = new XMLHttpRequest();
+    var username = "ZoxN11Sa";
+    var p_marker = {
+        url: 'passenger.png',
+        scaledSize: new google.maps.Size(40,40)
         }
         var v_marker = {
             url: 'http://www.newdesignfile.com/postpic/2013/01/car-icons-free-download_293908.png',
@@ -41,7 +40,7 @@
         {
             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
             getMyLocation();
-            run();
+            // run();
         }
         
         function getMyLocation()
@@ -51,6 +50,7 @@
                     mylat = position.coords.latitude;
                     mylng = position.coords.longitude;
                     renderMap();
+                    run();
                 });
             }
             else {
@@ -77,6 +77,11 @@
                 infowindow.open(map, marker);
             });
         }
+        function displayInfo() {
+            console.log("CLICK", this);
+            infowindow.setContent(this.title);
+            infowindow.open(map, this);
+        }
         function run() {
             request.open("POST", "https://defense-in-derpth.herokuapp.com/submit", true);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -86,40 +91,40 @@
             request.onreadystatechange = function addMarkers() {
                 if (request.readyState == 4 && request.status == 200) {
                     var jsonObj = request.responseText;
-                    var elements = JSON.parse(jsonObj);
-                // console.log(jsonObj[2]);
-                // console.log(elements);
-                // console.log(Object.keys(elements.vehicles).length);
-                for (var i = 0; i < Object.keys(elements).length; i++){
-                    // console.log("in for loop");
-                    if (jsonObj[2] == "p") {
-                        var passenger = new google.maps.LatLng(elements.passengers[i].lat, elements.passengers[i].lng);
-                        var distance = google.maps.geometry.spherical.computeDistanceBetween(vehicle, me);
-                        marker = new google.maps.Marker({
-                            position: passenger,
-                            title: String(elements.passengers[i].username),
-                            label: String(distance),
-                            icon: p_marker
-                        });
-                        marker.setMap(map);
+                    var obj = JSON.parse(jsonObj);
+                    if (obj.passengers) {
+                        for (var i = 0; i < obj.passengers.length; i++) {
+                            var p = obj.passengers[i];
+                            var passenger = new google.maps.LatLng(p.lat, p.lng);
+                            var distance = google.maps.geometry.spherical.computeDistanceBetween(vehicle, me);
+                            marker = new google.maps.Marker({
+                                position: passenger,
+                                title: String(p.username),
+                                label: String(distance),
+                                icon: p_marker,
+                                map: map
+                            });
+                            marker.addListener('click', displayInfo);
+                        }
                     }
-                    if (jsonObj[2] == "v") {
-                        var vehicle = new google.maps.LatLng(elements.vehicles[i].lat, elements.vehicles[i].lng);
-                        var distance = google.maps.geometry.spherical.computeDistanceBetween(vehicle, me);
-                        console.log(vehicle);
-                        console.log(String(elements.vehicles[i].username));
-                        marker = new google.maps.Marker({
-                            position: vehicle,
-                            title: String(elements.vehicles[i].username),
-                            label: String(distance),
-                            icon: v_marker,
-                            map: map
-                        });
-                        
-                        marker.setMap(map);
-                    }
-                    console.log(i);
-                }
+                    if (obj.vehicles) {
+                        for (var i = 0; i < obj.vehicles.length; i++) {
+                            var v = obj.vehicles[i];
+                            var vehicle = new google.maps.LatLng(v.lat, v.lng);
+                            var distance = google.maps.geometry.spherical.computeDistanceBetween(vehicle, me);
+                            console.log(vehicle);
+                            console.log(String(v.username));
+                            marker = new google.maps.Marker({
+                                position: vehicle,
+                                title: v.username  + ": " + distance,
+                                // label: String(distance),
+                                icon: v_marker,
+                                map: map
+                            });
+                            marker.addListener('click', displayInfo);
+                        }
+                        console.log(i);
+                    }   
                     // console.log(jsonObj);
                     // console.log(elements);
 
@@ -130,4 +135,4 @@
         }
 
     </script>
-</html>
+    </html>
