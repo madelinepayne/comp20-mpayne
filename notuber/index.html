@@ -20,6 +20,15 @@
         var infowindow = new google.maps.InfoWindow();
         var request = new XMLHttpRequest();
         var username = "ZoxN11Sa";
+        var p_marker = {
+            url: 'https://img.clipartfox.com/7151250dd1619b1d45a9f068d7cdae0f_illustrated-silhouette-of-a-person-clipart-silhouette-no-background_958-958.png',
+            scaledSize: new google.maps.Size(40,40)
+            // anchor: new google.maps.Point(mylat, mylng)
+        }
+        var v_marker = {
+            url: 'https://img.clipartfest.com/3e5b9896ca5de2595d669f42075718b4_car-line-vector-icon-on-white-car-clipart-transparent-background_1300-1300.jpeg',
+            scaledSize: new google.maps.Size(40,40)
+        }
         
         function init()
         {
@@ -49,50 +58,63 @@
             
             marker = new google.maps.Marker({
                 position: me,
-                title: "ZoxN11Sa"
+                title: "ZoxN11Sa",
+                icon: p_marker
             });
             marker.setMap(map);
             
             google.maps.event.addListener(marker, 'click', function () {
                 infowindow.setContent(marker.title);
+                // infowindow.setContent(marker.distance);
                 infowindow.open(map, marker);
             });
         }
-        // request.onreadystatechange = function() 
-        // {
-            request.open("POST", "https://defense-in-derpth.herokuapp.com/submit", true);
-            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            var data_to_send = "username=" + username + "&lat=" + mylat + "&lng=" + mylng;
-            request.send(data_to_send);
-            
-            request.onreadystatechange = function() {
-                if (request.readyState == 4 && request.status == 200) {
-                    var jsonObj = request.responseText;
-                    var elements = JSON.parse(jsonObj);
-                    
+        request.open("POST", "https://defense-in-derpth.herokuapp.com/submit", true);
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        var data_to_send = "username=" + username + "&lat=" + mylat + "&lng=" + mylng;
+        request.send(data_to_send);
+        
+        request.onreadystatechange = function() {
+            if (request.readyState == 4 && request.status == 200) {
+                var jsonObj = request.responseText;
+                var elements = JSON.parse(jsonObj);
+                // console.log(jsonObj[2]);
+                // console.log(elements);
+                // console.log(Object.keys(elements.vehicles).length);
+                for (var i = 0; i < Object.keys(elements).length; i++){
+                    // console.log("in for loop");
                     if (jsonObj[2] == "p") {
-                        
+                        var passenger = new google.maps.LatLng(elements.passengers[i].lat, elements.passengers[i].lng);
+                        marker = new google.maps.Marker({
+                            position: passenger,
+                            title: String(elements.passengers[i].username),
+                            icon: p_marker
+                        });
+                        marker.setMap(map);
                     }
+                    if (jsonObj[2] == "v") {
+                        // console.log(elements.vehicles[0].lat);
+                        var vehicle = new google.maps.LatLng(elements.vehicles[i].lat, elements.vehicles[i].lng);
+                        // console.log("made new vehicle");
+                        marker = new google.maps.Marker({
+                            position: vehicle,
+                            title: String(elements.vehicles[i].username),
+                            icon: v_marker,
+                            map: map
+                        });
+                        marker.setMap(map);
+                    }
+                }
                     // console.log(jsonObj);
-                    var vehicle = "";
-                    var username, _id, lat, lng, created_at;
-                    for (i in elements) {
-                        vehicle._id = elements[i]._id;
-                        console.log(vehicle._id);
-                        vehicle.username = elements[i].username;
-                        vehicle.lat = elements[i].lat;
-                        vehicle.lng = elements[i].lng;
-                        vehicle.created_at = elements[i].created_at;
-                       
-                    // console.log(elements);
-                    }
+                    console.log(elements);
+
                     
                 }
             }
-    </script>
+        </script>
 
-</head>
-<body onload="init()">
-    <div id="map_canvas"></div>
-</body>
-</html>
+    </head>
+    <body onload="init()">
+        <div id="map_canvas"></div>
+    </body>
+    </html>
