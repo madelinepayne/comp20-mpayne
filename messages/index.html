@@ -6,7 +6,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
-            console.log("9");
             $.getJSON("https://messagehub.herokuapp.com/messages.json", function(elements) {
                 var html = [];
                 $.each(elements, function(i, e) {
