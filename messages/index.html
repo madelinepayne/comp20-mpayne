@@ -8,24 +8,11 @@
         $(document).ready(function(){
             console.log("9");
             $.getJSON("https://messagehub.herokuapp.com/messages.json", function(elements) {
-                var newData = [];
-                var toPush;
-                $.each(elements, function(i) {
-                    $.each(elements[i], function (key, val) {
-                        if (key == "content") {
-                            console.log(key + ": " + val);
-                            toPush =  "<p>" + val;
-                        };
-                        if (key == "username") {
-                            console.log(key + ": " + val);
-                            if(i == 0) {
-                                $("#messages").html(toPush + " by " + val + "</p>");
-                            } else {
-                                $("#messages").append(toPush + " by " + val + "</p>");
-                            }
-                        }
-                    });
+                var html = [];
+                $.each(elements, function(i, e) {
+                    html.push("<p>" + e.content + " by " + e.username + "</p>");
                 });
+                $("#messages").html(html);
             });
         });
     </script>
