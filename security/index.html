@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Assignment 4</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="main">
+        <h1>Assignment 4: Security and Privacy Assessment of Client-Side and Server-Side</h1>
+        <p>By: Madeline Payne</p>
+        <p>Date: 26 April 2017</p>
+        <h1>Introduction </h1>
+        <p>In the POST method, the program takes a user's username, lat, and lng and inserts a document into the database for that user as either a passenger or vehicle based on the username. The program makes a created_at field which is also part of the document inserted.</p>
+        <p>In the GET method, if one specifies the username of a specific vehicle that they are looking for, the program will return the information in the specific document in the database linked to by the username. If no username is specified, the program will return a list of all vehicles that have a created_at field within the last five minutes.</p>
+        <h1>Methodology</h1>
+        <p>At first I tried to do injections. However because both the passenger and vehicle usernames were whitelisted, and the lat and lng were both checked it was impossible for me to do that since they always threw the incorrect data error.</p>
+        <p>Instead I had to focus on other errors simply be looking at the source code. That is how I found my three issues.</p>
+        <h1>Abstract of Findings</h1>
+        <p>By using an asterisk in the response header, it opens up the program to anyone because all domains are freely allowed to access our domain.</p>
+        <p>By including the whitelists, it is like leaving a list of all the login names lying around. If someone finds the whitelist, they have a full list of all the credentials and so would be able to login easily and manipulate the domain. </p>
+        <p>Publishing the locations of people is obviously just a bad idea. It is a privacy breach. If someone had malicious intentions they would be able to see a person's username and current location. Who knows what they would do with that information</p>
+        <h1>Issues Found: </h1>
+        <h3>Issue 1</h3>
+        <p>Issue Found: wildcard used as a value in the Access Control header</p>
+        <p>Location: index.js line 15</p>
+        <p>Severity: Medium/High - All domains are allowed. Attackers can easily extract the content of the page.</p>
+        <p>Description: found by reading the source code</p>
+        <p>Proof of vulnerability: </p>
+        <img src="issue_1.png" alt="picture of first issue" />
+        <br>
+        <a href="http://yassineaboukir.com/blog/security-impact-of-a-misconfigured-cors-implementation/">More Information</a>
+        <p>Resolution: Simply do not include "*" in the Access Control header. Instead all you need is response.header("Access-Control-Allow-Origin");</p>
+        <h3>Issue 2</h3>
+        <p>Issue Found: whitelist of passengers and vehicles directly in index.js</p>
+        <p>Location: index.js lines 18 and 19</p>
+        <p>Severity: High - If anyone malicious gets a hold of the whitelists, they can overload the server and make it crash</p>
+        <p>Description: found by reading the source code</p>
+        <p>Proof of vulnerability: </p>
+        <img src="issue_2.png" alt="picture of second issue" />
+        <p>Resolution: Remove the whitelists from the code. Instead use a database or a table in a database to store all the valid IDs. Then consult that to check validity of username rather than the whitelist.</p>
+        <h3>Issue 3</h3>
+        <p>Issue Found: Geolocation for each person who check ins is displayed on the website</p>
+        <p>Location: index.js line 102</p>
+        <p>Severity: Low - Having the coordinates on display isn't that important unless someone is going to go plug those in to find out where exactly someone is for malicious purposes.</p>
+        <p>Description: found by reading the source code</p>
+        <p>Proof of vulnerability: </p>
+        <img src="issue_3_a.png" alt="picture of third issue in code" />
+        <br>
+        <img src="issue_3_b.png" alt="picture of third issue on website" />
+        <p>Resolution: Do not openly display the location that the person submitted from.</p>
+        <h1>Conclusion</h1>
+        <p> It was not possible to inject malicious javascript in the POST method due to the whitelists for both passengers and vehicles. This was a good protection although ultimately dangerous if people were able to get hold of the whitelist. </p>
+        <h1>References</h1>
+        <p>
+            <ul>
+                <li><a href="https://www.veracode.com/directory/owasp-top-10">https://www.veracode.com/directory/owasp-top-10</a></li>
+                <li><a href="http://blog.websecurify.com/2014/08/hacking-nodejs-and-mongodb.html">http://blog.websecurify.com/2014/08/hacking-nodejs-and-mongodb.html</a></li>
+                <li><a href="http://www.veracode.com/security/xss">http://www.veracode.com/security/xss</a></li>
+            </ul>
+    </div>
+</body>
+
+</html>
