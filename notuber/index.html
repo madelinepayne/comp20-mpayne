@@ -81,7 +81,7 @@
             infowindow.open(map, this);
         }
         function run() {
-            request.open("POST", "https://defense-in-derpth.herokuapp.com/submit", true);
+            request.open("POST", "https://sheltered-citadel-78635.herokuapp.com/submit", true);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             var data_to_send = "username=" + username + "&lat=" + mylat + "&lng=" + mylng;
             request.send(data_to_send);
